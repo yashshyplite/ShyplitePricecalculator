@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title >
+            price calculator
+        </title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    </head>
+    <body>
+        <form action="/post" method="POST">
+            <div class="container"><br>
+                <input class="form-control" id="exampleFormControlInput1" type="text" name="sourcePin" placeholder="sourcePin"><br>
+                <input class="form-control" id="exampleFormControlInput1" type="text" name="destinationPin" placeholder="destinationPin"><br>
+                <select name="orderType" class="form-select">
+                    <option value="1" selected>OrderTypes</option>
+                    <option value="1">COD</option>
+                    <option value="2">Prepaid</option>
+                    <option value="3">Reverse</option>
+                </select><br>
+                <input class="form-control" id="exampleFormControlInput1" type="text" name="length" placeholder="length"><br>
+                <input class="form-control" id="exampleFormControlInput1" type="text" name="width" placeholder="width"><br>
+                <input class="form-control" id="exampleFormControlInput1" type="text" name="height" placeholder="height"><br>
+                <input class="form-control" id="exampleFormControlInput1" type="text" name="weight" placeholder="weight"><br>
+                <input class="form-control" id="exampleFormControlInput1" type="text" name="invoiceValue" placeholder="invoiceValue" value='2'><br>
+                <button class="btn btn-light" type="submit">submit</button>
+            </div>
+        </form>
+    </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    </body>
+</html>
