@@ -3,7 +3,7 @@ const util = require('util');
 require('dotenv').config();
 const requesting = require('request');
 const request = util.promisify(requesting);
-
+const mysql = require('mysql');
 
 const timestamp     = +new Date();
 const key           = process.env.API_KEY;
@@ -11,6 +11,21 @@ const appID         = process.env.API_APPID;
 const sellerID      = process.env.API_SELLERID;
 const secret        = new Buffer(process.env.API_SECRET);
 
+//create connection 
+const db= mysql.createConnection({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    database: process.env.MYSQL_DB,
+    password: process.env.MYSQL_PASSWORD,
+    port: process.env.MYSQL_PORT
+});
+
+db.connect(err=>{
+    if(err){
+        throw err;
+    }
+    console.log("connected");
+});
 
 const form =(req,res)=>{
    return res.render("index");
@@ -45,7 +60,7 @@ const price = async (req,res)=>{
         console.log(js);    
         var encoded= generateAuth();
         console.log('endcoded-----------------------> ',encoded);
-        const response = await request({
+        const promise1 =  request({
             uri:"https://api.shyplite.com/pricecalculator",
             method:"POST",
             body: js,
@@ -60,8 +75,44 @@ const price = async (req,res)=>{
             },
             json: true
         });
+        const promise2 =  request({
+            uri:`https://api.shyplite.com/getserviceability/${req.body.sourcePin}/${req.body.destinationPin}`,
+            method:"GET",
+            headers: {
+                "x-appid": appID,
+                "x-sellerid": sellerID,
+                "x-timestamp": timestamp,
+                "x-version":'3', 
+                "Authorization":encoded,
+            },
+        });
+       const [ response, response2 ] = await Promise.all([promise1,promise2]);
+        let post = {
+            sourcePin: js.sourcePin,
+            destinationPin: js.destinationPin,
+            orderType: js.orderType,
+            length: js.length,
+            width: js.width,
+            height: js.height,
+            weight: js.weight,
+            invoiceValue: js.invoiceValue,
+            air:response.body.pricing["air"],
+            surface10:response.body.pricing["surface-10kg"],
+            surface5:response.body.pricing["surface-5kg"],
+            surface30:response.body.pricing["surface-30kg"],
+            lite2:response.body.pricing["lite-2kg"],
+            lite1:response.body.pricing["lite-1kg"],
+            lite05:response.body.pricing["lite-0.5kg"]
+        };
+        let sql = "INSERT INTO pricecaculator SET ?";
+        db.query(sql,post,err=>{
+            if(err){
+                throw err;
+            }
+        });
         res.send(response.body);
-        console.log("response------",response.body);
+        // res.send(response2.body);
+        console.log("response------",response.body,"\nresponse 2\n",response2.body);
     }
     catch(err){
  
