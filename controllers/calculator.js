@@ -11,8 +11,6 @@ const appID         = process.env.API_APPID;
 const sellerID      = process.env.API_SELLERID;
 const secret        = new Buffer(process.env.API_SECRET);
 
-
-
 const form =(req,res)=>{
    return res.render("index");
 }
@@ -106,6 +104,41 @@ const price = async (req,res)=>{
     }
 }
 
+var redirectLogin = (req,res,next)=>{
+    if(!(req.session.user && req.cookies.user_id)){
+        res.redirect('/login');
+    }
+    else{
+        next();
+    }
+}
+var redirecthome = (req,res,next)=>{
+    if(req.session.user && req.cookies.user_id){
+        res.redirect('/');
+    }
+    else{
+        next();
+    }
+}
+
+const login =(req,res)=>{
+    return res.render("login");
+ }
+const logincheck=(req,res)=>{
+    var un=req.body.ID;
+    var p = req.body.Password;
+
+    try{
+        if(un=='xxx'||p=='xxx'){
+            req.session.user=un;
+            return res.redirect('/');
+        }
+        res.redirect('/login')
+    }
+    catch(err){
+        console.log(err);
+    }
+}
 module.exports={
-    form,price
+    form,price,redirectLogin,redirecthome,login,logincheck
 }

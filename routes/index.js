@@ -1,13 +1,11 @@
 const express = require('express');
 const router=express.Router();
-const {form,price}=require('../controllers/calculator')
-const bodyParser = require('body-parser');
+const {form,price,redirectLogin,redirecthome,login,logincheck}=require('../controllers/calculator')
 
 
-var jsonParser = bodyParser.json();
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
-router.get('/',form);
-router.post('/post',urlencodedParser,price);
+router.get('/',redirectLogin,form)
+router.post('/post',price);
+router.get('/login',redirecthome,login);
+router.post('/login',logincheck)
 
 module.exports=router;
