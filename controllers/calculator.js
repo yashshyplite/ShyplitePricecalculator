@@ -129,7 +129,7 @@ const logincheck=(req,res)=>{
     var p = req.body.Password;
 
     try{
-        if(un=='xxx'||p=='xxx'){
+        if(un=='xxx'&&p=='xxx'){
             req.session.user=un;
             return res.redirect('/');
         }
@@ -139,6 +139,15 @@ const logincheck=(req,res)=>{
         console.log(err);
     }
 }
+const logout =(req,res)=>{
+    req.session.destroy(err=>{
+        // console.log(err);
+        if(err!=undefined)
+        return res.redirect('/');
+    })
+    res.clearCookie('sid');
+    return res.redirect('/');
+}
 module.exports={
-    form,price,redirectLogin,redirecthome,login,logincheck
+    form,price,redirectLogin,redirecthome,login,logincheck,logout
 }
